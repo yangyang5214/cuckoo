@@ -388,7 +388,8 @@ class Process(object):
 
         try:
             subprocess_checkoutput(argv, env)
-        except subprocess.CalledProcessError as e:
+        # except subprocess.CalledProcessError as e:
+        except Exception as e:
             log.error(
                 "Failed to execute process from path %r with "
                 "arguments %r (Error: %s)", path, argv, e
