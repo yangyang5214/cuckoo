@@ -59,7 +59,7 @@ class Package(object):
             "HomeDrive": [
                 # os.path.join() doesn't work well if you give it just "C:"
                 # so manually append a backslash.
-                os.getenv("HomeDrive") + "\\",
+                os.getenv("HomeDrive", "C:") + "\\",  # default use C:
             ],
         }
 
