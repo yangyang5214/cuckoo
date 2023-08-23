@@ -11,7 +11,6 @@ from cuckoo.common.exceptions import CuckooReportError
 from cuckoo.common.mongo import mongo
 from cuckoo.common.objects import File
 
-
 class MongoDB(Report):
     """Store report in MongoDB."""
     order = 2
@@ -69,8 +68,6 @@ class MongoDB(Report):
 
         for chunk in file_obj.get_chunks():
             new.write(chunk)
-            os.system("cp -r %s %s" % (self.file_path, "/data"))
-            break
 
         try:
             new.close()
