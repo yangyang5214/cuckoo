@@ -48,12 +48,14 @@ class MongoDB(Report):
             "sha256", unique=True, sparse=True, name="sha256_unique"
         )
 
-    def store_file(self, file_obj, filename=""):
+    def store_file(self, file_obj, filename="", metadata=None):
         """Store a file in GridFS.
         @param file_obj: object to the file to store
         @param filename: name of the file to store
         @return: object id of the stored file
         """
+        if metadata is None:
+            metadata = {}
         if not filename:
             filename = file_obj.get_name()
 
@@ -63,6 +65,7 @@ class MongoDB(Report):
             return existing["_id"]
 
         new = self.fs.new_file(filename=filename,
+                               metadata=metadata,
                                contentType=file_obj.get_content_type(),
                                sha256=file_obj.get_sha256())
 
@@ -260,4 +263,20 @@ class MongoDB(Report):
             report["procmon"] = procmon
 
         # Store the report and retrieve its object id.
-        self.db.analysis.save(report)
+        # self.db.analysis.save(report)
+        meta_data = gen_meta_data(report)
+        import tempfile
+        with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp_file:
+            import json
+            json.dump(report, temp_file)
+            sample = File(temp_file)
+            self.store_file(sample, filename="", metadata=meta_data)
+
+
+def gen_meta_data(report):
+    # 这里需要 搜索的字段放在 meta_data
+    return {
+        "info": report['info'],
+        "behavior": report['behavior'],
+        "network": report['network'],
+    }

@@ -33,6 +33,7 @@ read_lock = threading.RLock()
 write_lock = threading.RLock()
 pending_read_request = threading.Event()
 
+
 class ControlApi(object):
     @staticmethod
     def tunnel(request, task_id):
@@ -76,8 +77,13 @@ class ControlApi(object):
 
     @staticmethod
     def get_report(task_id):
-        return mdb.db.analysis.find_one({
-            "info.id": int(task_id)
+        # return mdb.db.analysis.find_one({
+        #     "info.id": int(task_id)
+        # })
+        return mdb.fs.files.find({
+            "metadata": {
+                "info.id": int(task_id)
+            }
         })
 
     @api_post
