@@ -80,7 +80,7 @@ class ControlApi(object):
         # return mdb.db.analysis.find_one({
         #     "info.id": int(task_id)
         # })
-        return mdb.fs.files.find({
+        return mdb.db.analysis.fs.files.find({
             "metadata": {
                 "info.id": int(task_id)
             }
